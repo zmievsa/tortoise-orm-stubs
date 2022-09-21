@@ -1,12 +1,14 @@
 [tool.poetry]
-name = "any_python_template"
+name = "tortoise-stubs"
 version = "0.1.0"
 description = ""
+packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+tortoise-orm = "*"
 
 [tool.poetry.dev-dependencies]
 pyupgrade = "^2.37.3"
