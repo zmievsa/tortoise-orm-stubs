@@ -9,7 +9,7 @@ from tortoise import fields
 from tortoise.fields.relational import ForeignKeyField
 
 mfields = []
-for field in set(fields.__all__):
+for field in sorted(list(set(fields.__all__))):
     field_val = getattr(fields, field)
     if (
         inspect.isclass(field_val)
@@ -39,6 +39,7 @@ import tortoise
 import tortoise.fields
 import tortoise.validators
 from tortoise.models import Model
+from tortoise.fields import *
 """
 )
 
@@ -49,6 +50,6 @@ for n, f in mfields:
 
 p(f"\ndef ForeignKeyField{inspect.signature(ForeignKeyField).replace(return_annotation=typing.Any)}: ...")
 
-Path(__file__).parent.parent.joinpath("tortoise-stubs/__init__.pyi").write_text(
+Path(__file__).parent.parent.joinpath("tortoise-stubs/fields/__init__.pyi").write_text(
     "\n".join(deq).replace("NoneType", "None")
 )

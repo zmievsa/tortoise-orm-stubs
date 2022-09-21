@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tortoise-stubs"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
