@@ -49,6 +49,7 @@ for n, f in mfields:
 
 p(f"\ndef ForeignKeyField{inspect.signature(ForeignKeyField).replace(return_annotation=typing.Any)}: ...")
 
+
 Path(__file__).parent.parent.joinpath("tortoise-stubs/fields/__init__.pyi").write_text(
     "\n".join(deq).replace("NoneType", "None")
 )
