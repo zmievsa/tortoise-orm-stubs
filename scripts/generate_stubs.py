@@ -35,13 +35,12 @@ import decimal
 import uuid
 from typing import Any, Callable, List, Literal, Optional, Union, overload
 
-import tortoise
 import tortoise.fields
 import tortoise.validators
 from tortoise.models import Model
-from tortoise.fields import *
 """
 )
+p(Path(fields.__file__).read_text())
 
 for n, f in mfields:
     p(f"@overload\ndef {n}{s.replace(parameters=non_nullable_params.values(), return_annotation=f)}: ...")
