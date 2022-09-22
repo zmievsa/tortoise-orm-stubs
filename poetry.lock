@@ -49,6 +49,7 @@ mypy-extensions = ">=0.4.3"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
 tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
+typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -307,8 +308,8 @@ python-versions = ">=3.7"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "e2eb2860b8cc430ccb98947dc1dfe59cb1925217af0d7059a6873bb215e045bb"
+python-versions = "^3.8"
+content-hash = "9bc5dcd5d21b95e2e4c7c43ecbeb106e9be93e973aefa0f93946ee89c7243e83"
 
 [metadata.files]
 aiosqlite = [
