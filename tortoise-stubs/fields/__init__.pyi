@@ -1,40 +1,18 @@
 import datetime
 import decimal
 import uuid
-from typing import Any, Callable, List, Literal, Optional, Union, overload
+from typing import Any, Callable, List, Literal, Optional, Type, Union, overload
 
-import tortoise.fields
 import tortoise.validators
-from tortoise.fields.base import (
+from tortoise.fields import (
     CASCADE,
     NO_ACTION,
     RESTRICT,
     SET_DEFAULT,
     SET_NULL,
-    Field,
-)
-from tortoise.fields.data import (
-    BigIntField,
-    BinaryField,
-    BooleanField,
-    CharEnumField,
-    CharField,
-    DateField,
-    DatetimeField,
-    DecimalField,
-    FloatField,
-    IntEnumField,
-    IntField,
-    JSONField,
-    SmallIntField,
-    TextField,
-    TimeDeltaField,
-    TimeField,
-    UUIDField,
-)
-from tortoise.fields.relational import (
     BackwardFKRelation,
     BackwardOneToOneRelation,
+    Field,
     ForeignKeyField,
     ForeignKeyNullableRelation,
     ForeignKeyRelation,
@@ -45,6 +23,7 @@ from tortoise.fields.relational import (
     OneToOneRelation,
     ReverseRelation,
 )
+from tortoise.fields.data import CharEnumType, IntEnumType
 from tortoise.models import Model
 
 __all__ = [
@@ -86,10 +65,16 @@ __all__ = [
 ]
 
 @overload
-def BigIntField(pk: bool = False, null: Literal[False] = False, **kwargs: Any) -> int: ...
+def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+    """
+    Big integer field. (64-bit signed)
+
+    ``pk`` (bool):
+        True if field is Primary Key.
+    """
+
 @overload
-def BigIntField(pk: bool = False, null: Literal[True] = False, **kwargs: Any) -> Union[int, None]: ...
-def BigIntField(pk: bool = False, null: bool = False, **kwargs: Any):
+def BigIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]:
     """
     Big integer field. (64-bit signed)
 
@@ -102,6 +87,7 @@ def BinaryField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
+    *,
     null: Literal[False] = False,
     default: Any = None,
     unique: bool = False,
@@ -110,13 +96,21 @@ def BinaryField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> bytes: ...
+) -> bytes:
+    """
+    Binary field.
+
+    This is for storing ``bytes`` objects.
+    Note that filter or queryset-update operations are not supported.
+    """
+
 @overload
 def BinaryField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
-    null: Literal[True] = False,
+    *,
+    null: Literal[True],
     default: Any = None,
     unique: bool = False,
     index: bool = False,
@@ -124,20 +118,7 @@ def BinaryField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> Union[bytes, None]: ...
-def BinaryField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: bool = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-):
+) -> Union[bytes, None]:
     """
     Binary field.
 
@@ -150,6 +131,7 @@ def BooleanField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
+    *,
     null: Literal[False] = False,
     default: Any = None,
     unique: bool = False,
@@ -158,43 +140,105 @@ def BooleanField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> bool: ...
-@overload
-def BooleanField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: Literal[True] = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-) -> Union[bool, None]: ...
-def BooleanField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: bool = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-):
+) -> bool:
     """
     Boolean field.
     """
 
 @overload
-def CharField(max_length: int = Ellipsis, null: Literal[False] = False, **kwargs: Any) -> str: ...
+def BooleanField(
+    source_field: Union[str, None] = None,
+    generated: bool = False,
+    pk: bool = False,
+    *,
+    null: Literal[True],
+    default: Any = None,
+    unique: bool = False,
+    index: bool = False,
+    description: Union[str, None] = None,
+    model: "Optional[Model]" = None,
+    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    **kwargs: Any
+) -> Union[bool, None]:
+    """
+    Boolean field.
+    """
+
 @overload
-def CharField(max_length: int = Ellipsis, null: Literal[True] = False, **kwargs: Any) -> Union[str, None]: ...
-def CharField(max_length: int = Ellipsis, null: bool = False, **kwargs: Any):
+def CharEnumField(
+    enum_type: Type[CharEnumType],
+    description: Union[str, None] = None,
+    max_length: int = 0,
+    *,
+    null: Literal[False] = False,
+    **kwargs: Any
+) -> CharEnumType:
+    """
+    Char Enum Field
+
+    A field representing a character enumeration.
+
+    **Warning**: If ``max_length`` is not specified or equals to zero, the size of represented
+    char fields is automatically detected. So if later you update the enum, you need to update your
+    table schema as well.
+
+    **Note**: Valid str value of ``enum_type`` is acceptable.
+
+    ``enum_type``:
+        The enum class
+    ``description``:
+        The description of the field. It is set automatically if not specified to a multiline list
+        of "name: value" pairs.
+    ``max_length``:
+        The length of the created CharField. If it is zero it is automatically detected from
+        enum_type.
+
+    """
+
+@overload
+def CharEnumField(
+    enum_type: Type[CharEnumType],
+    description: Union[str, None] = None,
+    max_length: int = 0,
+    *,
+    null: Literal[True],
+    **kwargs: Any
+) -> Union[CharEnumType, None]:
+    """
+    Char Enum Field
+
+    A field representing a character enumeration.
+
+    **Warning**: If ``max_length`` is not specified or equals to zero, the size of represented
+    char fields is automatically detected. So if later you update the enum, you need to update your
+    table schema as well.
+
+    **Note**: Valid str value of ``enum_type`` is acceptable.
+
+    ``enum_type``:
+        The enum class
+    ``description``:
+        The description of the field. It is set automatically if not specified to a multiline list
+        of "name: value" pairs.
+    ``max_length``:
+        The length of the created CharField. If it is zero it is automatically detected from
+        enum_type.
+
+    """
+
+@overload
+def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -> str:
+    """
+    Character field.
+
+    You must provide the following:
+
+    ``max_length`` (int):
+        Maximum length of the field in characters.
+    """
+
+@overload
+def CharField(max_length: int, *, null: Literal[True], **kwargs: Any) -> Union[str, None]:
     """
     Character field.
 
@@ -209,6 +253,7 @@ def DateField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
+    *,
     null: Literal[False] = False,
     default: Any = None,
     unique: bool = False,
@@ -217,13 +262,18 @@ def DateField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> datetime.date: ...
+) -> datetime.date:
+    """
+    Date field.
+    """
+
 @overload
 def DateField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
-    null: Literal[True] = False,
+    *,
+    null: Literal[True],
     default: Any = None,
     unique: bool = False,
     index: bool = False,
@@ -231,33 +281,31 @@ def DateField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> Union[datetime.date, None]: ...
-def DateField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: bool = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-):
+) -> Union[datetime.date, None]:
     """
     Date field.
     """
 
 @overload
 def DatetimeField(
-    auto_now: bool = False, auto_now_add: bool = False, null: Literal[False] = False, **kwargs: Any
-) -> datetime.datetime: ...
+    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
+) -> datetime.datetime:
+    """
+    Datetime field.
+
+    ``auto_now`` and ``auto_now_add`` is exclusive.
+    You can opt to set neither or only ONE of them.
+
+    ``auto_now`` (bool):
+        Always set to ``datetime.utcnow()`` on save.
+    ``auto_now_add`` (bool):
+        Set to ``datetime.utcnow()`` on first save only.
+    """
+
 @overload
 def DatetimeField(
-    auto_now: bool = False, auto_now_add: bool = False, null: Literal[True] = False, **kwargs: Any
-) -> Union[datetime.datetime, None]: ...
-def DatetimeField(auto_now: bool = False, auto_now_add: bool = False, null: bool = False, **kwargs: Any):
+    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
+) -> Union[datetime.datetime, None]:
     """
     Datetime field.
 
@@ -272,13 +320,23 @@ def DatetimeField(auto_now: bool = False, auto_now_add: bool = False, null: bool
 
 @overload
 def DecimalField(
-    max_digits: int = Ellipsis, decimal_places: int = Ellipsis, null: Literal[False] = False, **kwargs: Any
-) -> decimal.Decimal: ...
+    max_digits: int, decimal_places: int, *, null: Literal[False] = False, **kwargs: Any
+) -> decimal.Decimal:
+    """
+    Accurate decimal field.
+
+    You must provide the following:
+
+    ``max_digits`` (int):
+        Max digits of significance of the decimal field.
+    ``decimal_places`` (int):
+        How many of those significant digits is after the decimal point.
+    """
+
 @overload
 def DecimalField(
-    max_digits: int = Ellipsis, decimal_places: int = Ellipsis, null: Literal[True] = False, **kwargs: Any
-) -> Union[decimal.Decimal, None]: ...
-def DecimalField(max_digits: int = Ellipsis, decimal_places: int = Ellipsis, null: bool = False, **kwargs: Any):
+    max_digits: int, decimal_places: int, *, null: Literal[True], **kwargs: Any
+) -> Union[decimal.Decimal, None]:
     """
     Accurate decimal field.
 
@@ -295,6 +353,7 @@ def FloatField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
+    *,
     null: Literal[False] = False,
     default: Any = None,
     unique: bool = False,
@@ -303,43 +362,85 @@ def FloatField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> float: ...
-@overload
-def FloatField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: Literal[True] = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-) -> Union[float, None]: ...
-def FloatField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: bool = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-):
+) -> float:
     """
     Float (double) field.
     """
 
 @overload
-def IntField(pk: bool = False, null: Literal[False] = False, **kwargs: Any) -> int: ...
+def FloatField(
+    source_field: Union[str, None] = None,
+    generated: bool = False,
+    pk: bool = False,
+    *,
+    null: Literal[True],
+    default: Any = None,
+    unique: bool = False,
+    index: bool = False,
+    description: Union[str, None] = None,
+    model: "Optional[Model]" = None,
+    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    **kwargs: Any
+) -> Union[float, None]:
+    """
+    Float (double) field.
+    """
+
 @overload
-def IntField(pk: bool = False, null: Literal[True] = False, **kwargs: Any) -> Union[int, None]: ...
-def IntField(pk: bool = False, null: bool = False, **kwargs: Any):
+def IntEnumField(
+    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[False] = False, **kwargs: Any
+) -> IntEnumType:
+    """
+    Enum Field
+
+    A field representing an integer enumeration.
+
+    The description of the field is set automatically if not specified to a multiline list of
+    "name: value" pairs.
+
+    **Note**: Valid int value of ``enum_type`` is acceptable.
+
+    ``enum_type``:
+        The enum class
+    ``description``:
+        The description of the field. It is set automatically if not specified to a multiline list
+        of "name: value" pairs.
+
+    """
+
+@overload
+def IntEnumField(
+    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[True], **kwargs: Any
+) -> Union[IntEnumType, None]:
+    """
+    Enum Field
+
+    A field representing an integer enumeration.
+
+    The description of the field is set automatically if not specified to a multiline list of
+    "name: value" pairs.
+
+    **Note**: Valid int value of ``enum_type`` is acceptable.
+
+    ``enum_type``:
+        The enum class
+    ``description``:
+        The description of the field. It is set automatically if not specified to a multiline list
+        of "name: value" pairs.
+
+    """
+
+@overload
+def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+    """
+    Integer field. (32-bit signed)
+
+    ``pk`` (bool):
+        True if field is Primary Key.
+    """
+
+@overload
+def IntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]:
     """
     Integer field. (32-bit signed)
 
@@ -349,24 +450,12 @@ def IntField(pk: bool = False, null: bool = False, **kwargs: Any):
 
 @overload
 def JSONField(
-    encoder: Callable[[Any], str] = Ellipsis,
-    decoder: Callable[[Union[str, bytes]], Any] = Ellipsis,
+    encoder: Callable[[Any], str] = ...,
+    decoder: Callable[[Union[str, bytes]], Any] = ...,
+    *,
     null: Literal[False] = False,
     **kwargs: Any
-) -> Union[dict, list]: ...
-@overload
-def JSONField(
-    encoder: Callable[[Any], str] = Ellipsis,
-    decoder: Callable[[Union[str, bytes]], Any] = Ellipsis,
-    null: Literal[True] = False,
-    **kwargs: Any
-) -> Union[dict, list, None]: ...
-def JSONField(
-    encoder: Callable[[Any], str] = Ellipsis,
-    decoder: Callable[[Union[str, bytes]], Any] = Ellipsis,
-    null: bool = False,
-    **kwargs: Any
-):
+) -> Union[dict, list]:
     """
     JSON field.
 
@@ -384,10 +473,40 @@ def JSONField(
     """
 
 @overload
-def SmallIntField(pk: bool = False, null: Literal[False] = False, **kwargs: Any) -> int: ...
+def JSONField(
+    encoder: Callable[[Any], str] = ...,
+    decoder: Callable[[Union[str, bytes]], Any] = ...,
+    *,
+    null: Literal[True],
+    **kwargs: Any
+) -> Union[dict, list, None]:
+    """
+    JSON field.
+
+    This field can store dictionaries or lists of any JSON-compliant structure.
+
+    You can specify your own custom JSON encoder/decoder, leaving at the default should work well.
+    If you have ``python-rapidjson`` installed, we default to using that,
+    else the default ``json`` module will be used.
+
+    ``encoder``:
+        The custom JSON encoder.
+    ``decoder``:
+        The custom JSON decoder.
+
+    """
+
 @overload
-def SmallIntField(pk: bool = False, null: Literal[True] = False, **kwargs: Any) -> Union[int, None]: ...
-def SmallIntField(pk: bool = False, null: bool = False, **kwargs: Any):
+def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+    """
+    Small integer field. (16-bit signed)
+
+    ``pk`` (bool):
+        True if field is Primary Key.
+    """
+
+@overload
+def SmallIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]:
     """
     Small integer field. (16-bit signed)
 
@@ -397,13 +516,16 @@ def SmallIntField(pk: bool = False, null: bool = False, **kwargs: Any):
 
 @overload
 def TextField(
-    pk: bool = False, unique: bool = False, index: bool = False, null: Literal[False] = False, **kwargs: Any
-) -> str: ...
+    pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[False] = False, **kwargs: Any
+) -> str:
+    """
+    Large Text field.
+    """
+
 @overload
 def TextField(
-    pk: bool = False, unique: bool = False, index: bool = False, null: Literal[True] = False, **kwargs: Any
-) -> Union[str, None]: ...
-def TextField(pk: bool = False, unique: bool = False, index: bool = False, null: bool = False, **kwargs: Any):
+    pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[True], **kwargs: Any
+) -> Union[str, None]:
     """
     Large Text field.
     """
@@ -413,6 +535,7 @@ def TimeDeltaField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
+    *,
     null: Literal[False] = False,
     default: Any = None,
     unique: bool = False,
@@ -421,13 +544,18 @@ def TimeDeltaField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> datetime.timedelta: ...
+) -> datetime.timedelta:
+    """
+    A field for storing time differences.
+    """
+
 @overload
 def TimeDeltaField(
     source_field: Union[str, None] = None,
     generated: bool = False,
     pk: bool = False,
-    null: Literal[True] = False,
+    *,
+    null: Literal[True],
     default: Any = None,
     unique: bool = False,
     index: bool = False,
@@ -435,42 +563,39 @@ def TimeDeltaField(
     model: "Optional[Model]" = None,
     validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
     **kwargs: Any
-) -> Union[datetime.timedelta, None]: ...
-def TimeDeltaField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
-    null: bool = False,
-    default: Any = None,
-    unique: bool = False,
-    index: bool = False,
-    description: Union[str, None] = None,
-    model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
-    **kwargs: Any
-):
+) -> Union[datetime.timedelta, None]:
     """
     A field for storing time differences.
     """
 
 @overload
 def TimeField(
-    auto_now: bool = False, auto_now_add: bool = False, null: Literal[False] = False, **kwargs: Any
-) -> datetime.time: ...
-@overload
-def TimeField(
-    auto_now: bool = False, auto_now_add: bool = False, null: Literal[True] = False, **kwargs: Any
-) -> Union[datetime.time, None]: ...
-def TimeField(auto_now: bool = False, auto_now_add: bool = False, null: bool = False, **kwargs: Any):
+    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
+) -> datetime.time:
     """
     Time field.
     """
 
 @overload
-def UUIDField(null: Literal[False] = False, **kwargs: Any) -> uuid.UUID: ...
+def TimeField(
+    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
+) -> Union[datetime.time, None]:
+    """
+    Time field.
+    """
+
 @overload
-def UUIDField(null: Literal[True] = False, **kwargs: Any) -> Union[uuid.UUID, None]: ...
-def UUIDField(null: bool = False, **kwargs: Any):
+def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> uuid.UUID:
+    """
+    UUID Field
+
+    This field can store uuid value.
+
+    If used as a primary key, it will auto-generate a UUID4 by default.
+    """
+
+@overload
+def UUIDField(*, null: Literal[True], **kwargs: Any) -> Union[uuid.UUID, None]:
     """
     UUID Field
 
