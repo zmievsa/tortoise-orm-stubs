@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tortoise-stubs"
-version = "0.3.3"
+version = "0.3.4"
 description = ""
 packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
@@ -17,6 +17,7 @@ autoflake = "^1.5.3"
 pytest = "^7.1.3"
 pytest-cov = "^3.0.0"
 isort = "^5.10.1"
+mypy = "^0.971"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
