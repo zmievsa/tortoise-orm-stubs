@@ -5,13 +5,18 @@ from copy import deepcopy
 from pathlib import Path
 
 import tortoise.fields.base
+import tortoise.fields.data
+import tortoise.fields.relational
 from tortoise import fields
-from tortoise.fields.relational import ForeignKeyField
+from tortoise.fields.relational import ForeignKeyField, OneToOneField
 
 
 class AlternativeEllipsis:
     def __repr__(self):
         return "..."
+
+
+MANUALLY_ADDED_FIELDS = {"ForeignKeyField", "OneToOneField"}
 
 
 def get_fields(p: typing.Callable[[str], None]):
@@ -24,7 +29,16 @@ def get_fields(p: typing.Callable[[str], None]):
             elif "Field" in field_name:
                 mfields.append((field_name, inspect.signature(field_val).return_annotation, field_val))
             continue
-        p(f"from tortoise.fields import {field_name}")
+        elif field_name in MANUALLY_ADDED_FIELDS:
+            continue
+        if hasattr(field_val, "__module__") and "tortoise" in field_val.__module__:
+            p(f"from {field_val.__module__} import {field_name}")
+        elif field_name in tortoise.fields.data.__all__:
+            p(f"from tortoise.fields.data import {field_name}")
+        elif field_name in tortoise.fields.relational.__dict__:
+            p(f"from tortoise.fields.relational import {field_name}")
+        else:
+            p(f"from tortoise.fields.base import {field_name}")
     return mfields
 
 
@@ -47,7 +61,7 @@ def get_signature(cls_or_func, default_params: typing.Dict[str, inspect.Paramete
     nullable_params["null"] = nullable_params["null"].replace(annotation=typing.Literal[True], default=inspect._empty)
     non_nullable_params = deepcopy(params)
     non_nullable_params["null"] = non_nullable_params["null"].replace(annotation=typing.Literal[False])
-    return s, params, nullable_params, non_nullable_params
+    return s, nullable_params, non_nullable_params
 
 
 def build_new_params(params: typing.Dict[str, inspect.Parameter]):
@@ -68,43 +82,53 @@ def build_new_params(params: typing.Dict[str, inspect.Parameter]):
     return params
 
 
+def get_function_def(
+    name: str,
+    signature: inspect.Signature,
+    params: typing.Sequence[inspect.Parameter],
+    return_type: typing.Any,
+    doc: str = "",
+) -> str:
+    signature = signature.replace(parameters=params, return_annotation=return_type)
+    secondline = f'''\n    """{doc}"""''' if doc else " ..."
+    return f"@overload\ndef {name}{signature}:{secondline}".replace("~", "")
+
+
+def get_foreign_key_def(foreign_key_func: typing.Callable) -> str:
+    return f"\ndef {foreign_key_func.__name__}{inspect.signature(foreign_key_func).replace(return_annotation=typing.Any)}: ..."
+
+
 def main():
     DEFAULT_PARAMS = dict(inspect.signature(tortoise.fields.base.Field.__init__).parameters.items())
     del DEFAULT_PARAMS["self"]
 
     deq = deque()
     p = deq.append
-    p(
-        """
-    import datetime
-    import decimal
-    import uuid
-    from typing import Any, Callable, List, Literal, Optional, Union, overload, Type
-
-    import tortoise.validators
-    from tortoise.models import Model
-    """
-    )
     mfields = get_fields(p)
-    p("__all__ = " + str(fields.__all__))
+    p("__all__ = " + str(list(fields.__all__)))
 
     for n, f, v in mfields:
-        s, params, nullable_params, non_nullable_params = get_signature(v, DEFAULT_PARAMS)
+        s, nullable_params, non_nullable_params = get_signature(v, DEFAULT_PARAMS)
         if isinstance(f, typing.TypeVar):
             deq.appendleft(f"from tortoise.fields.data import {str(f).lstrip('~')}")
-        p(
-            f'@overload\ndef {n}{s.replace(parameters=list(non_nullable_params.values()), return_annotation=f)}:\n    """{v.__doc__ or ...}"""'.replace(
-                "~", ""  # Dangerous? Yes. But what the hell else would I do with those typevars
-            )
-        )
-        p(
-            f'@overload\ndef {n}{s.replace(parameters=list(nullable_params.values()), return_annotation=typing.Optional[f])}:\n    """{v.__doc__ or ...}"""'.replace(
-                "~", ""  # Dangerous? Yes. But what the hell else would I do with those typevars
-            )
-        )
-        # p(f"def {n}{s.replace(parameters=params.values(), return_annotation=inspect._empty)}: ...")
 
-    p(f"\ndef ForeignKeyField{inspect.signature(ForeignKeyField).replace(return_annotation=typing.Any)}: ...")
+        p(get_function_def(n, s, list(non_nullable_params.values()), f, v.__doc__))
+        p(get_function_def(n, s, list(nullable_params.values()), typing.Optional[f]))
+
+    p(get_foreign_key_def(ForeignKeyField))
+    p(get_foreign_key_def(OneToOneField))
+
+    deq.appendleft(
+        """
+import datetime
+import decimal
+import uuid
+from typing import Any, Callable, List, Literal, Optional, Union, overload, Type
+
+import tortoise.validators
+from tortoise.models import Model
+"""
+    )
 
     Path(__file__).parent.parent.joinpath("tortoise-stubs/fields/__init__.pyi").write_text(
         "\n".join(deq).replace("NoneType", "None")

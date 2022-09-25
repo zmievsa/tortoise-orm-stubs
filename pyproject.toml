@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tortoise-stubs"
-version = "0.3.4"
+version = "0.3.5"
 description = ""
 packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
@@ -22,3 +22,26 @@ mypy = "^0.971"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.html]
+skip_covered = true
+skip_empty = true
+
+[tool.coverage.report]
+omit = []
+fail_under = 90
+skip_covered = true
+skip_empty = true
+show_missing = true
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip_gitignore = true
+skip_glob = []
+line_length = 120
+lines_between_sections = 1
+
+[tool.black]
+line-length = 120
+target_version = ['py38']
