@@ -1,9 +1,10 @@
 # tortoise-stubs
 
-Type stubs that make tortoise a bit easier to work with when using type checkers.
+Type stubs that make tortoise-orm a lot easier to work with when using type checkers.
 
-For example,
+Specifically,
 
 * ForeignKeyField can be typehinted without an extra type ignore
-* Data fields' types are now typehinted as the primitive types they describe, not Field subclasses
-* Data fields' types become optional for your typechecker with null=True argument
+* OneToOneField can be typehinted without an extra type ignore
+* Data fields' types are now automatically typehinted as the primitive types they describe, not Field subclasses
+* Data fields' types automatically reflect the value of null argument (i.e. become optional if you set null=True)
