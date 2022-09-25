@@ -7,6 +7,8 @@ from pathlib import Path
 import tortoise.fields.base
 import tortoise.fields.data
 import tortoise.fields.relational
+import tortoise.models
+from pysh import sh
 from tortoise import fields
 from tortoise.fields.relational import ForeignKeyField, OneToOneField
 
@@ -130,9 +132,9 @@ from tortoise.models import Model
 """
     )
 
-    Path(__file__).parent.parent.joinpath("tortoise-stubs/fields/__init__.pyi").write_text(
-        "\n".join(deq).replace("NoneType", "None")
-    )
+    ROOT = Path(__file__).parent.parent
+    ROOT.joinpath("tortoise-stubs/fields/__init__.pyi").write_text("\n".join(deq).replace("NoneType", "None"))
+    sh("make format", cwd=ROOT)
 
 
 if __name__ == "__main__":

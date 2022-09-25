@@ -225,6 +225,14 @@ optional = false
 python-versions = ">=3.7,<4.0"
 
 [[package]]
+name = "pysh"
+version = "3.0.3"
+description = "A library of small functions that simplify scripting in python"
+category = "dev"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[[package]]
 name = "pytest"
 version = "7.1.3"
 description = "pytest: simple powerful testing with Python"
@@ -327,7 +335,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4ab7c132120c3add731d708c2d0fa39ae737eb1fe3fc96b9b483e58c935aa301"
+content-hash = "095beea5ceac0224e232b5a7bb1bada05971322b57f03c2f5f2f9207f8a593f4"
 
 [metadata.files]
 aiosqlite = [
@@ -499,6 +507,10 @@ pyparsing = [
 pypika-tortoise = [
     {file = "pypika-tortoise-0.1.6.tar.gz", hash = "sha256:d802868f479a708e3263724c7b5719a26ad79399b2a70cea065f4a4cadbebf36"},
     {file = "pypika_tortoise-0.1.6-py3-none-any.whl", hash = "sha256:2d68bbb7e377673743cff42aa1059f3a80228d411fbcae591e4465e173109fd8"},
+]
+pysh = [
+    {file = "pysh-3.0.3-py3-none-any.whl", hash = "sha256:b623637bfe4b0a127c8627fc9e870fc0f13994869acc18452ba57c9b2c4359dd"},
+    {file = "pysh-3.0.3.tar.gz", hash = "sha256:fe809c64e582c97261fef823ac14846b109b75e7702155302e1d8830fcb6fae4"},
 ]
 pytest = [
     {file = "pytest-7.1.3-py3-none-any.whl", hash = "sha256:1377bda3466d70b55e3f5cecfa55bb7cfcf219c7964629b967c37cf0bda818b7"},

@@ -1,10 +1,12 @@
 [tool.poetry]
 name = "tortoise-stubs"
 version = "0.3.5"
-description = ""
+description = "Type stubs that make tortoise-orm a lot easier to work with when using type checkers."
 packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/Ovsyanka83/tortoise-stubs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -18,6 +20,7 @@ pytest = "^7.1.3"
 pytest-cov = "^3.0.0"
 isort = "^5.10.1"
 mypy = "^0.971"
+pysh = "^3.0.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
