@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "tortoise-stubs"
+name = "types-tortoise"
 version = "0.3.5"
 description = "Type stubs that make tortoise-orm a lot easier to work with when using type checkers."
 packages = [{ include = "tortoise-stubs" }]

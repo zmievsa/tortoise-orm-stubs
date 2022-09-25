@@ -1,4 +1,4 @@
-# tortoise-stubs
+# types-tortoise
 
 Type stubs that make tortoise-orm a lot easier to work with when using type checkers.
 
