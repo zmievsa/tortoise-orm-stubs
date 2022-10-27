@@ -10,7 +10,6 @@ import tortoise.fields.relational
 import tortoise.models
 from pysh import sh
 from tortoise import fields
-from tortoise.fields.relational import ForeignKeyField, OneToOneField
 
 
 class AlternativeEllipsis:
@@ -71,8 +70,7 @@ def build_new_params(params: typing.Dict[str, inspect.Parameter]):
     for k, v in params.items():
         if v.kind in {inspect.Parameter.VAR_KEYWORD, inspect.Parameter.VAR_POSITIONAL}:
             continue
-        if callable(v.default) and v.default is not inspect._empty:
-            params[k] = v.replace(default=AlternativeEllipsis())
+        params[k] = v.replace(default=AlternativeEllipsis())
         if null_found:
             pass
         elif k == "null":
@@ -96,10 +94,6 @@ def get_function_def(
     return f"@overload\ndef {name}{signature}:{secondline}".replace("~", "")
 
 
-def get_foreign_key_def(foreign_key_func: typing.Callable) -> str:
-    return f"\ndef {foreign_key_func.__name__}{inspect.signature(foreign_key_func).replace(return_annotation=typing.Any)}: ..."
-
-
 def main():
     DEFAULT_PARAMS = dict(inspect.signature(tortoise.fields.base.Field.__init__).parameters.items())
     del DEFAULT_PARAMS["self"]
@@ -117,15 +111,13 @@ def main():
         p(get_function_def(n, s, list(non_nullable_params.values()), f, v.__doc__))
         p(get_function_def(n, s, list(nullable_params.values()), typing.Optional[f]))
 
-    p(get_foreign_key_def(ForeignKeyField))
-    p(get_foreign_key_def(OneToOneField))
-
     deq.appendleft(
         """
 import datetime
 import decimal
 import uuid
-from typing import Any, Callable, List, Literal, Optional, Union, overload, Type
+from collections.abc import Callable
+from typing import Any, List, Literal, Optional, Union, overload, Type
 
 import tortoise.validators
 from tortoise.models import Model

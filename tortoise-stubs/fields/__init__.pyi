@@ -1,7 +1,8 @@
 import datetime
 import decimal
 import uuid
-from typing import Any, Callable, List, Literal, Optional, Type, Union, overload
+from collections.abc import Callable
+from typing import Any, List, Literal, Optional, Type, Union, overload
 
 import tortoise.validators
 from tortoise.fields.base import NO_ACTION, SET_DEFAULT, Field
@@ -61,7 +62,7 @@ __all__ = [
 ]
 
 @overload
-def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def BigIntField(pk: bool = ..., *, null: Literal[False] = False, **kwargs: Any) -> int:
     """
     Big integer field. (64-bit signed)
 
@@ -70,12 +71,12 @@ def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any
     """
 
 @overload
-def BigIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def BigIntField(pk: bool = ..., *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
 @overload
 def BinaryField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[False] = False,
     default: Any = None,
@@ -95,9 +96,9 @@ def BinaryField(
 
 @overload
 def BinaryField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[True],
     default: Any = None,
@@ -110,9 +111,9 @@ def BinaryField(
 ) -> Union[bytes, None]: ...
 @overload
 def BooleanField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[False] = False,
     default: Any = None,
@@ -129,9 +130,9 @@ def BooleanField(
 
 @overload
 def BooleanField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[True],
     default: Any = None,
@@ -144,9 +145,9 @@ def BooleanField(
 ) -> Union[bool, None]: ...
 @overload
 def CharEnumField(
-    enum_type: Type[CharEnumType],
-    description: Union[str, None] = None,
-    max_length: int = 0,
+    enum_type: Type[CharEnumType] = ...,
+    description: Union[str, None] = ...,
+    max_length: int = ...,
     *,
     null: Literal[False] = False,
     **kwargs: Any,
@@ -175,15 +176,15 @@ def CharEnumField(
 
 @overload
 def CharEnumField(
-    enum_type: Type[CharEnumType],
-    description: Union[str, None] = None,
-    max_length: int = 0,
+    enum_type: Type[CharEnumType] = ...,
+    description: Union[str, None] = ...,
+    max_length: int = ...,
     *,
     null: Literal[True],
     **kwargs: Any,
 ) -> Union[CharEnumType, None]: ...
 @overload
-def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -> str:
+def CharField(max_length: int = ..., *, null: Literal[False] = False, **kwargs: Any) -> str:
     """
     Character field.
 
@@ -194,12 +195,12 @@ def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -
     """
 
 @overload
-def CharField(max_length: int, *, null: Literal[True], **kwargs: Any) -> Union[str, None]: ...
+def CharField(max_length: int = ..., *, null: Literal[True], **kwargs: Any) -> Union[str, None]: ...
 @overload
 def DateField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[False] = False,
     default: Any = None,
@@ -216,9 +217,9 @@ def DateField(
 
 @overload
 def DateField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[True],
     default: Any = None,
@@ -231,7 +232,7 @@ def DateField(
 ) -> Union[datetime.date, None]: ...
 @overload
 def DatetimeField(
-    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
+    auto_now: bool = ..., auto_now_add: bool = ..., *, null: Literal[False] = False, **kwargs: Any
 ) -> datetime.datetime:
     """
     Datetime field.
@@ -247,11 +248,11 @@ def DatetimeField(
 
 @overload
 def DatetimeField(
-    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
+    auto_now: bool = ..., auto_now_add: bool = ..., *, null: Literal[True], **kwargs: Any
 ) -> Union[datetime.datetime, None]: ...
 @overload
 def DecimalField(
-    max_digits: int, decimal_places: int, *, null: Literal[False] = False, **kwargs: Any
+    max_digits: int = ..., decimal_places: int = ..., *, null: Literal[False] = False, **kwargs: Any
 ) -> decimal.Decimal:
     """
     Accurate decimal field.
@@ -266,13 +267,13 @@ def DecimalField(
 
 @overload
 def DecimalField(
-    max_digits: int, decimal_places: int, *, null: Literal[True], **kwargs: Any
+    max_digits: int = ..., decimal_places: int = ..., *, null: Literal[True], **kwargs: Any
 ) -> Union[decimal.Decimal, None]: ...
 @overload
 def FloatField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[False] = False,
     default: Any = None,
@@ -289,9 +290,9 @@ def FloatField(
 
 @overload
 def FloatField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[True],
     default: Any = None,
@@ -304,7 +305,11 @@ def FloatField(
 ) -> Union[float, None]: ...
 @overload
 def IntEnumField(
-    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[False] = False, **kwargs: Any
+    enum_type: Type[IntEnumType] = ...,
+    description: Union[str, None] = ...,
+    *,
+    null: Literal[False] = False,
+    **kwargs: Any,
 ) -> IntEnumType:
     """
     Enum Field
@@ -326,10 +331,10 @@ def IntEnumField(
 
 @overload
 def IntEnumField(
-    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[True], **kwargs: Any
+    enum_type: Type[IntEnumType] = ..., description: Union[str, None] = ..., *, null: Literal[True], **kwargs: Any
 ) -> Union[IntEnumType, None]: ...
 @overload
-def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def IntField(pk: bool = ..., *, null: Literal[False] = False, **kwargs: Any) -> int:
     """
     Integer field. (32-bit signed)
 
@@ -338,7 +343,7 @@ def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -
     """
 
 @overload
-def IntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def IntField(pk: bool = ..., *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
 @overload
 def JSONField(
     encoder: Callable[[Any], str] = ...,
@@ -372,7 +377,7 @@ def JSONField(
     **kwargs: Any,
 ) -> Union[dict, list, None]: ...
 @overload
-def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def SmallIntField(pk: bool = ..., *, null: Literal[False] = False, **kwargs: Any) -> int:
     """
     Small integer field. (16-bit signed)
 
@@ -381,10 +386,10 @@ def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: A
     """
 
 @overload
-def SmallIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def SmallIntField(pk: bool = ..., *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
 @overload
 def TextField(
-    pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[False] = False, **kwargs: Any
+    pk: bool = ..., unique: bool = ..., index: bool = ..., *, null: Literal[False] = False, **kwargs: Any
 ) -> str:
     """
     Large Text field.
@@ -392,13 +397,13 @@ def TextField(
 
 @overload
 def TextField(
-    pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[True], **kwargs: Any
+    pk: bool = ..., unique: bool = ..., index: bool = ..., *, null: Literal[True], **kwargs: Any
 ) -> Union[str, None]: ...
 @overload
 def TimeDeltaField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[False] = False,
     default: Any = None,
@@ -415,9 +420,9 @@ def TimeDeltaField(
 
 @overload
 def TimeDeltaField(
-    source_field: Union[str, None] = None,
-    generated: bool = False,
-    pk: bool = False,
+    source_field: Union[str, None] = ...,
+    generated: bool = ...,
+    pk: bool = ...,
     *,
     null: Literal[True],
     default: Any = None,
@@ -430,7 +435,7 @@ def TimeDeltaField(
 ) -> Union[datetime.timedelta, None]: ...
 @overload
 def TimeField(
-    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
+    auto_now: bool = ..., auto_now_add: bool = ..., *, null: Literal[False] = False, **kwargs: Any
 ) -> datetime.time:
     """
     Time field.
@@ -438,7 +443,7 @@ def TimeField(
 
 @overload
 def TimeField(
-    auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
+    auto_now: bool = ..., auto_now_add: bool = ..., *, null: Literal[True], **kwargs: Any
 ) -> Union[datetime.time, None]: ...
 @overload
 def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> uuid.UUID:
@@ -452,17 +457,3 @@ def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> uuid.UUID:
 
 @overload
 def UUIDField(*, null: Literal[True], **kwargs: Any) -> Union[uuid.UUID, None]: ...
-def ForeignKeyField(
-    model_name: str,
-    related_name: Union[str, None, Literal[False]] = None,
-    on_delete: str = "CASCADE",
-    db_constraint: bool = True,
-    **kwargs: Any,
-) -> Any: ...
-def OneToOneField(
-    model_name: str,
-    related_name: Union[str, None, Literal[False]] = None,
-    on_delete: str = "CASCADE",
-    db_constraint: bool = True,
-    **kwargs: Any,
-) -> Any: ...
