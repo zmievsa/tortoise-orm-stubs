@@ -346,7 +346,7 @@ def JSONField(
     *,
     null: Literal[False] = False,
     **kwargs: Any,
-) -> Union[dict, list]:
+) -> Any:
     """
     JSON field.
 
@@ -370,7 +370,7 @@ def JSONField(
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> Union[dict, list, None]: ...
+) -> Optional[Any]: ...
 @overload
 def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
     """
