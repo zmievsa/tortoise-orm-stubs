@@ -1,8 +1,10 @@
 import datetime
 import decimal
+import typing
 import uuid
 from typing import Any, Callable, List, Literal, Optional, Type, Union, overload
 
+import tortoise.fields.base
 import tortoise.validators
 from tortoise.fields.base import NO_ACTION, SET_DEFAULT, Field
 from tortoise.fields.data import CharEnumType, IntEnumType
@@ -12,10 +14,12 @@ from tortoise.fields.relational import (
     SET_NULL,
     BackwardFKRelation,
     BackwardOneToOneRelation,
+    ForeignKeyField,
     ForeignKeyNullableRelation,
     ForeignKeyRelation,
     ManyToManyField,
     ManyToManyRelation,
+    OneToOneField,
     OneToOneNullableRelation,
     OneToOneRelation,
     ReverseRelation,
@@ -61,7 +65,7 @@ __all__ = [
 ]
 
 @overload
-def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[int]:
     """
     Big integer field. (64-bit signed)
 
@@ -70,10 +74,12 @@ def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any
     """
 
 @overload
-def BigIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def BigIntField(
+    pk: bool = False, *, null: Literal[True], **kwargs: Any
+) -> tortoise.fields.base.Field[typing.Optional[int]]: ...
 @overload
 def BinaryField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -81,11 +87,11 @@ def BinaryField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> bytes:
+) -> tortoise.fields.base.Field[bytes]:
     """
     Binary field.
 
@@ -95,7 +101,7 @@ def BinaryField(
 
 @overload
 def BinaryField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -103,14 +109,14 @@ def BinaryField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Union[bytes, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[bytes]]: ...
 @overload
 def BooleanField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -118,18 +124,18 @@ def BooleanField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> bool:
+) -> tortoise.fields.base.Field[bool]:
     """
     Boolean field.
     """
 
 @overload
 def BooleanField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -137,20 +143,20 @@ def BooleanField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Union[bool, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[bool]]: ...
 @overload
 def CharEnumField(
     enum_type: Type[CharEnumType],
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     max_length: int = 0,
     *,
     null: Literal[False] = False,
     **kwargs: Any,
-) -> CharEnumType:
+) -> tortoise.fields.base.Field[CharEnumType]:
     """
     Char Enum Field
 
@@ -176,14 +182,14 @@ def CharEnumField(
 @overload
 def CharEnumField(
     enum_type: Type[CharEnumType],
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     max_length: int = 0,
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> Union[CharEnumType, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[CharEnumType]]: ...
 @overload
-def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -> str:
+def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[str]:
     """
     Character field.
 
@@ -194,10 +200,12 @@ def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -
     """
 
 @overload
-def CharField(max_length: int, *, null: Literal[True], **kwargs: Any) -> Union[str, None]: ...
+def CharField(
+    max_length: int, *, null: Literal[True], **kwargs: Any
+) -> tortoise.fields.base.Field[typing.Optional[str]]: ...
 @overload
 def DateField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -205,18 +213,18 @@ def DateField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> datetime.date:
+) -> tortoise.fields.base.Field[datetime.date]:
     """
     Date field.
     """
 
 @overload
 def DateField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -224,15 +232,15 @@ def DateField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Union[datetime.date, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[datetime.date]]: ...
 @overload
 def DatetimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
-) -> datetime.datetime:
+) -> tortoise.fields.base.Field[datetime.datetime]:
     """
     Datetime field.
 
@@ -248,11 +256,11 @@ def DatetimeField(
 @overload
 def DatetimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Union[datetime.datetime, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[datetime.datetime]]: ...
 @overload
 def DecimalField(
     max_digits: int, decimal_places: int, *, null: Literal[False] = False, **kwargs: Any
-) -> decimal.Decimal:
+) -> tortoise.fields.base.Field[decimal.Decimal]:
     """
     Accurate decimal field.
 
@@ -267,10 +275,10 @@ def DecimalField(
 @overload
 def DecimalField(
     max_digits: int, decimal_places: int, *, null: Literal[True], **kwargs: Any
-) -> Union[decimal.Decimal, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[decimal.Decimal]]: ...
 @overload
 def FloatField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -278,18 +286,18 @@ def FloatField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> float:
+) -> tortoise.fields.base.Field[float]:
     """
     Float (double) field.
     """
 
 @overload
 def FloatField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -297,15 +305,15 @@ def FloatField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Union[float, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[float]]: ...
 @overload
 def IntEnumField(
-    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[False] = False, **kwargs: Any
-) -> IntEnumType:
+    enum_type: Type[IntEnumType], description: Optional[str] = None, *, null: Literal[False] = False, **kwargs: Any
+) -> tortoise.fields.base.Field[IntEnumType]:
     """
     Enum Field
 
@@ -326,10 +334,10 @@ def IntEnumField(
 
 @overload
 def IntEnumField(
-    enum_type: Type[IntEnumType], description: Union[str, None] = None, *, null: Literal[True], **kwargs: Any
-) -> Union[IntEnumType, None]: ...
+    enum_type: Type[IntEnumType], description: Optional[str] = None, *, null: Literal[True], **kwargs: Any
+) -> tortoise.fields.base.Field[typing.Optional[IntEnumType]]: ...
 @overload
-def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[int]:
     """
     Integer field. (32-bit signed)
 
@@ -338,7 +346,9 @@ def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -
     """
 
 @overload
-def IntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def IntField(
+    pk: bool = False, *, null: Literal[True], **kwargs: Any
+) -> tortoise.fields.base.Field[typing.Optional[int]]: ...
 @overload
 def JSONField(
     encoder: Callable[[Any], str] = ...,
@@ -346,7 +356,7 @@ def JSONField(
     *,
     null: Literal[False] = False,
     **kwargs: Any,
-) -> Any:
+) -> tortoise.fields.base.Field[typing.Union[dict, list]]:
     """
     JSON field.
 
@@ -370,9 +380,9 @@ def JSONField(
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> Optional[Any]: ...
+) -> tortoise.fields.base.Field[typing.Union[dict, list, None]]: ...
 @overload
-def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> int:
+def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[int]:
     """
     Small integer field. (16-bit signed)
 
@@ -381,11 +391,13 @@ def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: A
     """
 
 @overload
-def SmallIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Union[int, None]: ...
+def SmallIntField(
+    pk: bool = False, *, null: Literal[True], **kwargs: Any
+) -> tortoise.fields.base.Field[typing.Optional[int]]: ...
 @overload
 def TextField(
     pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[False] = False, **kwargs: Any
-) -> str:
+) -> tortoise.fields.base.Field[str]:
     """
     Large Text field.
     """
@@ -393,10 +405,10 @@ def TextField(
 @overload
 def TextField(
     pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Union[str, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[str]]: ...
 @overload
 def TimeDeltaField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -404,18 +416,18 @@ def TimeDeltaField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> datetime.timedelta:
+) -> tortoise.fields.base.Field[datetime.timedelta]:
     """
     A field for storing time differences.
     """
 
 @overload
 def TimeDeltaField(
-    source_field: Union[str, None] = None,
+    source_field: Optional[str] = None,
     generated: bool = False,
     pk: bool = False,
     *,
@@ -423,15 +435,15 @@ def TimeDeltaField(
     default: Any = None,
     unique: bool = False,
     index: bool = False,
-    description: Union[str, None] = None,
+    description: Optional[str] = None,
     model: "Optional[Model]" = None,
-    validators: Union[List[Union[tortoise.validators.Validator, Callable]], None] = None,
+    validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Union[datetime.timedelta, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[datetime.timedelta]]: ...
 @overload
 def TimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
-) -> datetime.time:
+) -> tortoise.fields.base.Field[datetime.time]:
     """
     Time field.
     """
@@ -439,9 +451,9 @@ def TimeField(
 @overload
 def TimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Union[datetime.time, None]: ...
+) -> tortoise.fields.base.Field[typing.Optional[datetime.time]]: ...
 @overload
-def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> uuid.UUID:
+def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[uuid.UUID]:
     """
     UUID Field
 
@@ -451,18 +463,4 @@ def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> uuid.UUID:
     """
 
 @overload
-def UUIDField(*, null: Literal[True], **kwargs: Any) -> Union[uuid.UUID, None]: ...
-def ForeignKeyField(
-    model_name: str,
-    related_name: Union[str, None, Literal[False]] = None,
-    on_delete: str = "CASCADE",
-    db_constraint: bool = True,
-    **kwargs: Any,
-) -> Any: ...
-def OneToOneField(
-    model_name: str,
-    related_name: Union[str, None, Literal[False]] = None,
-    on_delete: str = "CASCADE",
-    db_constraint: bool = True,
-    **kwargs: Any,
-) -> Any: ...
+def UUIDField(*, null: Literal[True], **kwargs: Any) -> tortoise.fields.base.Field[typing.Optional[uuid.UUID]]: ...

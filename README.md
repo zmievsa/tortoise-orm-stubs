@@ -1,14 +1,13 @@
 # tortoise-orm-stubs
 
-Type stubs that make tortoise-orm a lot easier to work with when using type checkers.
+Type stubs that make **tortoise-orm** a bit easier to work with when using type checkers.
 
-Specifically,
-
-* ForeignKeyField can be typehinted without an extra type ignore
-* OneToOneField can be typehinted without an extra type ignore
-* Data fields' types are now automatically typehinted as the primitive types they describe, not Field subclasses
-* Data fields' types automatically reflect the value of null argument (i.e. become optional if you set null=True)
+Specifically, data fields' types automatically reflect the value of null argument (i.e. become optional if you set null=True)
 
 ## Installation
 
 `pip install tortoise-orm-stubs`
+
+## Disclaimer
+
+Previously **tortoise-orm-stubs** provided a lot more value but now the majority of its functionality has become a part of **tortoise-orm**. Hopefully, it will become completely unnecessary in the future.

@@ -10,15 +10,11 @@ import tortoise.fields.relational
 import tortoise.models
 from pysh import sh
 from tortoise import fields
-from tortoise.fields.relational import ForeignKeyField, OneToOneField
 
 
 class AlternativeEllipsis:
     def __repr__(self):
         return "..."
-
-
-MANUALLY_ADDED_FIELDS = {"ForeignKeyField", "OneToOneField"}
 
 
 def get_fields(p: typing.Callable[[str], None]):
@@ -30,8 +26,6 @@ def get_fields(p: typing.Callable[[str], None]):
                 mfields.append((field_name, typing.get_args(field_val.__orig_bases__[0])[0], field_val))
             elif "Field" in field_name:
                 mfields.append((field_name, inspect.signature(field_val).return_annotation, field_val))
-            continue
-        elif field_name in MANUALLY_ADDED_FIELDS:
             continue
         if hasattr(field_val, "__module__") and "tortoise" in field_val.__module__:
             p(f"from {field_val.__module__} import {field_name}")
@@ -114,17 +108,23 @@ def main():
         if isinstance(f, typing.TypeVar):
             deq.appendleft(f"from tortoise.fields.data import {str(f).lstrip('~')}")
 
-        p(get_function_def(n, s, list(non_nullable_params.values()), f, v.__doc__))
-        p(get_function_def(n, s, list(nullable_params.values()), typing.Optional[f]))
-
-    p(get_foreign_key_def(ForeignKeyField))
-    p(get_foreign_key_def(OneToOneField))
+        p(get_function_def(n, s, list(non_nullable_params.values()), tortoise.fields.base.Field[f], v.__doc__))
+        p(
+            get_function_def(
+                n,
+                s,
+                list(nullable_params.values()),
+                tortoise.fields.base.Field[typing.Optional[f]],
+            )
+        )
 
     deq.appendleft(
         """
-import datetime
-import decimal
+import typing
 import uuid
+import decimal
+import datetime
+import tortoise.fields.base
 from typing import Any, Callable, List, Literal, Optional, Union, overload, Type
 
 import tortoise.validators
