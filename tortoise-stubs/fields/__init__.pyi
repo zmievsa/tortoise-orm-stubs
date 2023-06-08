@@ -1,5 +1,6 @@
 import datetime
 import decimal
+import typing
 import uuid
 from typing import Any, Callable, Generic, List, Literal, Optional, Type, TypeVar, Union, overload
 
@@ -64,14 +65,25 @@ __all__ = [
 ]
 VALUE = TypeVar("VALUE")
 
+
 class Field(Generic[VALUE], _Field):
-    def __new__(cls, *args: Any, **kwargs: Any) -> "Field[VALUE]": ...
+    def __new__(cls, *args: Any, **kwargs: Any) -> "Field[VALUE]":
+        ...
+
     @overload
-    def __get__(self, instance: None, owner: Type["Model"]) -> "Field[VALUE]": ...
+    def __get__(self, instance: None, owner: Type["Model"]) -> "Field[VALUE]":
+        ...
+
     @overload
-    def __get__(self, instance: "Model", owner: Type["Model"]) -> VALUE: ...
-    def __get__(self, instance: Optional["Model"], owner: Type["Model"]) -> "Field[VALUE] | VALUE": ...
-    def __set__(self, instance: "Model", value: VALUE) -> None: ...
+    def __get__(self, instance: "Model", owner: Type["Model"]) -> VALUE:
+        ...
+
+    def __get__(self, instance: Optional["Model"], owner: Type["Model"]) -> "Field[VALUE] | VALUE":
+        ...
+
+    def __set__(self, instance: "Model", value: VALUE) -> None:
+        ...
+
 
 @overload
 def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> Field[int]:
@@ -82,8 +94,12 @@ def BigIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any
         True if field is Primary Key.
     """
 
+
 @overload
-def BigIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]: ...
+def BigIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]:
+    ...
+
+
 @overload
 def BinaryField(
     source_field: Optional[str] = None,
@@ -106,6 +122,7 @@ def BinaryField(
     Note that filter or queryset-update operations are not supported.
     """
 
+
 @overload
 def BinaryField(
     source_field: Optional[str] = None,
@@ -120,7 +137,10 @@ def BinaryField(
     model: "Optional[Model]" = None,
     validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Field[typing.Optional[bytes]]: ...
+) -> Field[typing.Optional[bytes]]:
+    ...
+
+
 @overload
 def BooleanField(
     source_field: Optional[str] = None,
@@ -140,6 +160,7 @@ def BooleanField(
     Boolean field.
     """
 
+
 @overload
 def BooleanField(
     source_field: Optional[str] = None,
@@ -154,7 +175,10 @@ def BooleanField(
     model: "Optional[Model]" = None,
     validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Field[typing.Optional[bool]]: ...
+) -> Field[typing.Optional[bool]]:
+    ...
+
+
 @overload
 def CharEnumField(
     enum_type: Type[CharEnumType],
@@ -186,6 +210,7 @@ def CharEnumField(
 
     """
 
+
 @overload
 def CharEnumField(
     enum_type: Type[CharEnumType],
@@ -194,7 +219,10 @@ def CharEnumField(
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> Field[typing.Optional[CharEnumType]]: ...
+) -> Field[typing.Optional[CharEnumType]]:
+    ...
+
+
 @overload
 def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -> Field[str]:
     """
@@ -206,8 +234,12 @@ def CharField(max_length: int, *, null: Literal[False] = False, **kwargs: Any) -
         Maximum length of the field in characters.
     """
 
+
 @overload
-def CharField(max_length: int, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[str]]: ...
+def CharField(max_length: int, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[str]]:
+    ...
+
+
 @overload
 def DateField(
     source_field: Optional[str] = None,
@@ -227,6 +259,7 @@ def DateField(
     Date field.
     """
 
+
 @overload
 def DateField(
     source_field: Optional[str] = None,
@@ -241,7 +274,10 @@ def DateField(
     model: "Optional[Model]" = None,
     validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Field[typing.Optional[datetime.date]]: ...
+) -> Field[typing.Optional[datetime.date]]:
+    ...
+
+
 @overload
 def DatetimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
@@ -258,10 +294,14 @@ def DatetimeField(
         Set to ``datetime.utcnow()`` on first save only.
     """
 
+
 @overload
 def DatetimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Field[typing.Optional[datetime.datetime]]: ...
+) -> Field[typing.Optional[datetime.datetime]]:
+    ...
+
+
 @overload
 def DecimalField(
     max_digits: int, decimal_places: int, *, null: Literal[False] = False, **kwargs: Any
@@ -277,10 +317,14 @@ def DecimalField(
         How many of those significant digits is after the decimal point.
     """
 
+
 @overload
 def DecimalField(
     max_digits: int, decimal_places: int, *, null: Literal[True], **kwargs: Any
-) -> Field[typing.Optional[decimal.Decimal]]: ...
+) -> Field[typing.Optional[decimal.Decimal]]:
+    ...
+
+
 @overload
 def FloatField(
     source_field: Optional[str] = None,
@@ -300,6 +344,7 @@ def FloatField(
     Float (double) field.
     """
 
+
 @overload
 def FloatField(
     source_field: Optional[str] = None,
@@ -314,7 +359,10 @@ def FloatField(
     model: "Optional[Model]" = None,
     validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Field[typing.Optional[float]]: ...
+) -> Field[typing.Optional[float]]:
+    ...
+
+
 @overload
 def IntEnumField(
     enum_type: Type[IntEnumType], description: Optional[str] = None, *, null: Literal[False] = False, **kwargs: Any
@@ -337,10 +385,14 @@ def IntEnumField(
 
     """
 
+
 @overload
 def IntEnumField(
     enum_type: Type[IntEnumType], description: Optional[str] = None, *, null: Literal[True], **kwargs: Any
-) -> Field[typing.Optional[IntEnumType]]: ...
+) -> Field[typing.Optional[IntEnumType]]:
+    ...
+
+
 @overload
 def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> Field[int]:
     """
@@ -350,8 +402,12 @@ def IntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -
         True if field is Primary Key.
     """
 
+
 @overload
-def IntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]: ...
+def IntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]:
+    ...
+
+
 @overload
 def JSONField(
     encoder: Callable[[Any], str] = ...,
@@ -376,6 +432,7 @@ def JSONField(
 
     """
 
+
 @overload
 def JSONField(
     encoder: Callable[[Any], str] = ...,
@@ -383,7 +440,10 @@ def JSONField(
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> Field[typing.Union[dict, list, None]]: ...
+) -> Field[typing.Union[dict, list, None]]:
+    ...
+
+
 @overload
 def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> Field[int]:
     """
@@ -393,8 +453,12 @@ def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: A
         True if field is Primary Key.
     """
 
+
 @overload
-def SmallIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]: ...
+def SmallIntField(pk: bool = False, *, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[int]]:
+    ...
+
+
 @overload
 def TextField(
     pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[False] = False, **kwargs: Any
@@ -403,10 +467,14 @@ def TextField(
     Large Text field.
     """
 
+
 @overload
 def TextField(
     pk: bool = False, unique: bool = False, index: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Field[typing.Optional[str]]: ...
+) -> Field[typing.Optional[str]]:
+    ...
+
+
 @overload
 def TimeDeltaField(
     source_field: Optional[str] = None,
@@ -426,6 +494,7 @@ def TimeDeltaField(
     A field for storing time differences.
     """
 
+
 @overload
 def TimeDeltaField(
     source_field: Optional[str] = None,
@@ -440,7 +509,10 @@ def TimeDeltaField(
     model: "Optional[Model]" = None,
     validators: Optional[List[Union[tortoise.validators.Validator, Callable]]] = None,
     **kwargs: Any,
-) -> Field[typing.Optional[datetime.timedelta]]: ...
+) -> Field[typing.Optional[datetime.timedelta]]:
+    ...
+
+
 @overload
 def TimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[False] = False, **kwargs: Any
@@ -449,10 +521,14 @@ def TimeField(
     Time field.
     """
 
+
 @overload
 def TimeField(
     auto_now: bool = False, auto_now_add: bool = False, *, null: Literal[True], **kwargs: Any
-) -> Field[typing.Optional[datetime.time]]: ...
+) -> Field[typing.Optional[datetime.time]]:
+    ...
+
+
 @overload
 def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> Field[uuid.UUID]:
     """
@@ -463,5 +539,7 @@ def UUIDField(*, null: Literal[False] = False, **kwargs: Any) -> Field[uuid.UUID
     If used as a primary key, it will auto-generate a UUID4 by default.
     """
 
+
 @overload
-def UUIDField(*, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[uuid.UUID]]: ...
+def UUIDField(*, null: Literal[True], **kwargs: Any) -> Field[typing.Optional[uuid.UUID]]:
+    ...
