@@ -6,7 +6,7 @@ packages = [{ include = "tortoise-stubs" }]
 authors = ["Stanislav Zmiev <zmievsa@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/Ovsyanka83/tortoise-orm-stubs"
+repository = "https://github.com/zmievsa/tortoise-orm-stubs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
