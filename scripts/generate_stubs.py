@@ -133,7 +133,14 @@ from tortoise.models import Model
     )
 
     ROOT = Path(__file__).parent.parent
-    ROOT.joinpath("tortoise-stubs/fields/__init__.pyi").write_text("\n".join(deq).replace("NoneType", "None"))
+    result = ROOT.joinpath("tortoise-stubs/fields/__init__.pyi")
+    result.write_text("\n".join(deq).replace("NoneType", "None"))
+    sh("make format", cwd=ROOT)
+    result.write_text(
+        result.read_text().replace(
+            "tortoise.fields.base.Field[typing.Union[dict, list", "tortoise.fields.base.Field[typing.Union[Any"
+        )
+    )
     sh("make format", cwd=ROOT)
 
 

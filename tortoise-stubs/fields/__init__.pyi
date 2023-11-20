@@ -6,12 +6,9 @@ from typing import Any, Callable, List, Literal, Optional, Type, Union, overload
 
 import tortoise.fields.base
 import tortoise.validators
-from tortoise.fields.base import NO_ACTION, SET_DEFAULT, Field
+from tortoise.fields.base import CASCADE, NO_ACTION, RESTRICT, SET_DEFAULT, SET_NULL, Field, OnDelete
 from tortoise.fields.data import CharEnumType, IntEnumType
 from tortoise.fields.relational import (
-    CASCADE,
-    RESTRICT,
-    SET_NULL,
     BackwardFKRelation,
     BackwardOneToOneRelation,
     ForeignKeyField,
@@ -32,6 +29,7 @@ __all__ = [
     "SET_DEFAULT",
     "SET_NULL",
     "NO_ACTION",
+    "OnDelete",
     "Field",
     "BigIntField",
     "BinaryField",
@@ -356,14 +354,14 @@ def JSONField(
     *,
     null: Literal[False] = False,
     **kwargs: Any,
-) -> tortoise.fields.base.Field[typing.Union[dict, list]]:
+) -> tortoise.fields.base.Field[typing.Union[Any]]:
     """
     JSON field.
 
     This field can store dictionaries or lists of any JSON-compliant structure.
 
     You can specify your own custom JSON encoder/decoder, leaving at the default should work well.
-    If you have ``python-rapidjson`` installed, we default to using that,
+    If you have ``orjson`` installed, we default to using that,
     else the default ``json`` module will be used.
 
     ``encoder``:
@@ -380,7 +378,7 @@ def JSONField(
     *,
     null: Literal[True],
     **kwargs: Any,
-) -> tortoise.fields.base.Field[typing.Union[dict, list, None]]: ...
+) -> tortoise.fields.base.Field[typing.Union[Any, None]]: ...
 @overload
 def SmallIntField(pk: bool = False, *, null: Literal[False] = False, **kwargs: Any) -> tortoise.fields.base.Field[int]:
     """
